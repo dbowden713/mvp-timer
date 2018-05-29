@@ -665,6 +665,72 @@
           "time_var": "0"
         }
       ]
+    },
+    {
+      "id": "1582",
+      "name": "Deviling",
+      "respawn": [
+        {
+          "map": "pay_fild04",
+          "map_name": "Sograt Desert",
+          "time": "120",
+          "time_var": "60"
+        },
+        {
+          "map": "yuno_fild03",
+          "map_name": "El Mes Plateau",
+          "time": "60",
+          "time_var": "30"
+        }
+      ]
+    },
+    {
+      "id": "1096",
+      "name": "Angeling",
+      "respawn": [
+        {
+          "map": "pay_fild04",
+          "map_name": "Sograt Desert",
+          "time": "60",
+          "time_var": "30"
+        },
+        {
+          "map": "yuno_fild03",
+          "map_name": "El Mes Plateau",
+          "time": "60",
+          "time_var": "30"
+        },
+        {
+          "map": "xmas_dun01",
+          "map_name": "Toy Monitoring Warehouse",
+          "time": "60",
+          "time_var": "30"
+        }
+      ]
+    },
+    {
+      "id": "1120",
+      "name": "Ghostring",
+      "respawn": [
+        {
+          "map": "pay_fild04",
+          "map_name": "Sograt Desert",
+          "time": "60",
+          "time_var": "30"
+        },
+        {
+          "map": "prt_maze03",
+          "map_name": "Labyrinth Forest F3",
+          "time": "113",
+          "time_var": "57"
+        },
+        {
+          "map": "treasure02",
+          "map_name": "Sunken Ship F2",
+          "time": "33",
+          "time_var": "20"
+        }
+      ]
     }
   ]
 }

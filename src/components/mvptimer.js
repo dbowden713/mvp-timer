@@ -1,35 +1,26 @@
 import React, { Component } from "react";
-import MvpList from "./mvplist";
 
 export default class MvpTimer extends Component {
   constructor(props) {
     super(props);
-    var now = this.props.startTime.getTime();
     this.state = {
-      edit: false,
-      timerStart: this.props.startTime,
-      elapsed: 0,
-      spawnTimeMin: new Date(now + this.props.mvpInfo.time * 60 * 1000),
+      timerStart: this.props.mvpInfo.kill_time,
+      currentTime: this.props.currentTime,
+      spawnTimeMin: new Date(
+        this.props.mvpInfo.kill_time + this.props.mvpInfo.time * 60 * 1000
+      ),
       spawnTimeMax: new Date(
-        now +
+        this.props.mvpInfo.kill_time +
           (this.props.mvpInfo.time + this.props.mvpInfo.time_var) * 60 * 1000
       ),
       tombX: -1,
-      tombY: -1,
-      showMvpList: false
+      tombY: -1
     };
     this.delete = this.delete.bind(this);
-    this.toggleEdit = this.toggleEdit.bind(this);
     this.tick = this.tick.bind(this);
-    this.getElapsed = this.getElapsed.bind(this);
     this.getCountdown = this.getCountdown.bind(this);
     this.placeMarker = this.placeMarker.bind(this);
     this.positionMarker = this.positionMarker.bind(this);
-    this.showMvpList = this.showMvpList.bind(this);
-  }
-
-  toggleEdit() {
-    this.setState({ edit: !this.state.edit });
   }
 
   delete() {
@@ -45,14 +36,14 @@ export default class MvpTimer extends Component {
   }
 
   tick() {
-    this.setState({ elapsed: this.state.elapsed + 1000 });
+    this.setState({ currentTime: this.props.currentTime });
+    if (
+      this.state.spawnTimeMin - this.state.currentTime <
+      -2 * this.props.mvpInfo.time * 60 * 1000
+    ) {
+      this.delete();
+    }
   }
-
-  getElapsed() {
-    return Math.round(this.state.elapsed / 1000);
-  }
-
-  setKillTime() {}
 
   positionMarker(e) {
     var rect = e.target.getBoundingClientRect();
@@ -80,38 +71,32 @@ export default class MvpTimer extends Component {
   }
 
   getCountdown(time) {
-    var currentTime = this.state.timerStart.getTime() + this.state.elapsed;
-    var targetTime = time.getTime();
-    var seconds = Math.floor((targetTime - currentTime) / 1000);
+    var timeDifference = time.getTime() - this.state.currentTime;
+    var seconds = Math.floor(Math.abs(timeDifference) / 1000);
     var hours = Math.floor(seconds / 3600);
     var minutes = Math.floor((seconds - hours * 3600) / 60);
     var secs = seconds - hours * 3600 - minutes * 60;
+    var neg = "";
+    if (timeDifference < 0) {
+      neg = "-";
+    }
     if (secs < 10) {
       secs = "0" + secs;
     }
-    if (minutes < 10 && hours > 0) {
+    if (minutes < 10 && hours !== 0) {
       minutes = "0" + minutes;
     }
-    if (hours < 1) {
-      return minutes + ":" + secs;
+    if (hours === 0 || hours === "-0") {
+      return neg + minutes + ":" + secs;
     }
-    return hours + ":" + minutes + ":" + secs;
-  }
-
-  showMvpList() {
-    if (this.state.edit)
-      this.setState({ showMvpList: !this.state.showMvpList });
+    return neg + hours + ":" + minutes + ":" + secs;
   }
 
   render(props) {
-    var editStyle = this.state.edit ? { border: "1px solid #aaf" } : null;
     return (
-      <div className="mvpTimer list-group-item" style={editStyle}>
+      <div className="mvpTimer list-group-item">
         <div className="mvpTimerName mb-1">{this.props.mvpInfo.name}</div>
         <div className="mvpTimerControls">
-          <a className="" onClick={this.toggleEdit}>
-            <img src={"../img/edit.png"} alt="?" />
-          </a>
           <a className="" onClick={this.delete}>
             <img src={"../img/delete.png"} alt="-" />
           </a>
@@ -122,7 +107,6 @@ export default class MvpTimer extends Component {
             alt={this.props.mvpInfo.name + " (" + this.state.id + ")"}
             onClick={this.showMvpList}
           />
-          {this.state.edit && this.state.showMvpList ? <MvpList /> : null}
         </div>
         <div className="mapImg">
           {this.placeMarker()}

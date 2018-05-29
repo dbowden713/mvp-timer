@@ -11,6 +11,7 @@ export default class MvpList extends React.Component {
     this.setSearchText = this.setSearchText.bind(this);
   }
   filterMvp(mvp, i) {
+    //if (this.state.searchText.length < 2) return null;
     if (
       this.state.searchText &&
       mvp.name.toUpperCase().indexOf(this.state.searchText) > -1
@@ -35,10 +36,14 @@ export default class MvpList extends React.Component {
   setSearchText(e) {
     this.setState({ searchText: e.target.value.toUpperCase() });
   }
+
+  componentDidMount() {
+    document.getElementById("mvpSearch").focus();
+  }
   displayMvpPicker() {
     const mvpList = mvps.map((mvp, i) => this.filterMvp(mvp, i));
     return (
-      <div className="mvpPicker">
+      <div id="mvpPicker">
         <div className="form-group list-group-item">
           <label htmlFor="mvpSearch">New MVP</label>
           <input
@@ -54,7 +59,10 @@ export default class MvpList extends React.Component {
     );
   }
   pickMvp(index) {
-    this.setState({ editing: !this.state.editing, index: index });
+    var mvp = {};
+    mvp.id = mvps[index].id;
+    mvp.name = mvps[index].name;
+    this.props.addNewTimerInfo(mvp);
   }
   render(props) {
     return this.displayMvpPicker();

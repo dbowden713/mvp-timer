@@ -10,28 +10,34 @@ body {
   position: relative;
 }
 
-.mvpPicker {
+#mvpPicker,
+#mapPicker,
+#timePicker {
   max-width: 300px;
   width: 300px;
   position: absolute;
-  left: -20px;
-  z-index: 1;
-  height: 250px;
+  z-index: 5;
 }
 
-.mvpPickerList {
-  height: 250px;
-  overflow: auto;
+.mvpPickerList,
+.mapPickerList,
+.timePickerList {
+  overflow: hidden;
+  max-height: 376px;
 }
 
-.mvpPickerImg img {
+.mvpPickerImg img,
+.mapPickerImg img,
+.timePickerImg img {
   max-width: 50px !important;
   height: 50px !important;
   margin-left: auto;
   margin-right: auto;
 }
 
-.mvpPickerImg {
+.mvpPickerImg,
+.mapPickerImg,
+.timePickerImg {
   float: left;
   height: 50px;
   width: 50px;
@@ -41,6 +47,11 @@ body {
   background-color: #444;
   box-shadow: 2px 2px 2px black;*/
   margin-right: 10px;
+}
+
+#tombTime {
+  float: left;
+  width: 100px;
 }
 
 .mvpTimer .mvpImg {
@@ -74,7 +85,9 @@ body {
   margin-right: auto;
 }
 
-.mvpPickerItem {
+.mvpPickerItem,
+.mapPickerItem,
+.timePickerItem {
   line-height: 50px;
 }
 

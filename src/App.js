@@ -4,26 +4,67 @@ import Header from "./components/header";
 import MvpTimer from "./components/mvptimer";
 import "./bootstrap.css";
 import { timers } from "./timers";
+import MvpList from "./components/mvplist";
+import MapList from "./components/maplist";
+import TimeSelect from "./components/timeselect";
 
 export default class App extends Component {
   constructor() {
     super();
     this.state = {
-      newMvp: false,
+      addingTimer: false,
       currentTimers: timers,
-      serverTime: 0
+      serverTime: 0,
+      newTimer: {}
     };
 
-    this.addMvp = this.addMvp.bind(this);
+    this.toggleNewTimer = this.toggleNewTimer.bind(this);
     this.deleteTimer = this.deleteTimer.bind(this);
+    this.clearTimers = this.clearTimers.bind(this);
     this.listTimers = this.listTimers.bind(this);
-    this.getTime = this.getTime.bind(this);
+    this.getServerTime = this.getServerTime.bind(this);
     this.tick = this.tick.bind(this);
+    this.newTimerForm = this.newTimerForm.bind(this);
+    this.createNewTimer = this.createNewTimer.bind(this);
   }
-  addMvp() {
-    this.setState({ newMvp: !this.state.newMvp });
-    this.createNewTimer(timers[0]);
+  toggleNewTimer() {
+    // if we were in the process of adding a new mvp, clear it out
+    if (this.state.addingTimer) {
+      this.setState({ newTimer: {} });
+    }
+    this.setState({ addingTimer: !this.state.addingTimer });
   }
+  newTimerForm() {
+    if (this.state.addingTimer) {
+      if (!("id" in this.state.newTimer)) {
+        return <MvpList addNewTimerInfo={info => this.addNewTimerInfo(info)} />;
+      } else if (!("map" in this.state.newTimer)) {
+        return (
+          <MapList
+            addNewTimerInfo={info => this.addNewTimerInfo(info)}
+            mvp={this.state.newTimer}
+          />
+        );
+      } else if (!("kill_time" in this.state.newTimer)) {
+        return (
+          <TimeSelect
+            addNewTimerInfo={info => this.addNewTimerInfo(info)}
+            currentTime={this.getServerTime(true)}
+          />
+        );
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  addNewTimerInfo(info) {
+    var newTimerObj = Object.assign(info, this.state.newTimer);
+    this.setState({ newTimer: newTimerObj });
+  }
+
   deleteTimer(i) {
     let arr = this.state.currentTimers;
     arr.splice(i, 1);
@@ -32,18 +73,34 @@ export default class App extends Component {
   clearTimers() {
     this.setState({ currentTimers: [] });
   }
-  createNewTimer(newMvp) {
-    let newTimers = this.state.currentTimers;
-    newTimers.push(newMvp);
-    this.setState({ currentTimers: newTimers });
+  createNewTimer() {
+    if (
+      "id" in this.state.newTimer &&
+      "map" in this.state.newTimer &&
+      "kill_time" in this.state.newTimer
+    ) {
+      let newTimers = this.state.currentTimers;
+      newTimers.push(this.state.newTimer);
+      this.setState({
+        currentTimers: newTimers,
+        newTimer: {},
+        addingTimer: false
+      });
+    }
+  }
+  componentDidUpdate() {
+    this.createNewTimer();
   }
   componentDidMount() {
     this.timer = setInterval(this.tick, 1000);
   }
-  tick() {
-    this.setState({ serverTime: this.getTime() });
+  componentWillUnmount() {
+    clearInterval(this.timer);
   }
-  getTime(obj = false) {
+  tick() {
+    this.setState({ serverTime: this.getServerTime() });
+  }
+  getServerTime(obj = false) {
     var time = new Date();
     var timeOffset = time.getTimezoneOffset();
     time.setMinutes(time.getMinutes() + timeOffset - 240);
@@ -58,21 +115,18 @@ export default class App extends Component {
         index={i}
         delete={this.deleteTimer}
         mvpInfo={timer}
-        startTime={this.getTime(true)}
+        currentTime={this.getServerTime(true)}
       />
     );
   }
   render() {
-    var currentTime = this.getTime();
     return (
       <div id="appContainer">
         <div style={{ textAlign: "center" }}>
-          <h3>{currentTime}</h3>
+          <h3>{this.getServerTime()}</h3>
         </div>
-        <Header
-          newTimer={this.addMvp.bind(this)}
-          clearTimers={this.clearTimers.bind(this)}
-        />
+        <Header newTimer={this.toggleNewTimer} clearTimers={this.clearTimers} />
+        {this.newTimerForm()}
         <ul className="mvpTimerList list-group">
           {this.state.currentTimers.map(this.listTimers)}
         </ul>

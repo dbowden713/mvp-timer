@@ -6,15 +6,8 @@
       "map": "mjolnir_04",
       "map_name": "Mt. Mjolnir",
       "time": 120,
-      "time_var": 10
-    },
-    {
-      "id": "1511",
-      "name": "Amon Ra",
-      "map": "moc_pryd06",
-      "map_name": "Mt. Mjolnir",
-      "time": 120,
-      "time_var": 10
+      "time_var": 10,
+      "kill_time": 1527625070101
     }
   ]
 }
