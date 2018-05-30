@@ -13,7 +13,7 @@ export default class App extends Component {
     super();
     this.state = {
       addingTimer: false,
-      currentTimers: timers,
+      currentTimers: [],
       serverTime: 0,
       newTimer: {}
     };
@@ -92,6 +92,7 @@ export default class App extends Component {
     this.createNewTimer();
   }
   componentDidMount() {
+    this.setState({ currentTimers: timers });
     this.timer = setInterval(this.tick, 1000);
   }
   componentWillUnmount() {
@@ -115,7 +116,7 @@ export default class App extends Component {
         index={i}
         delete={this.deleteTimer}
         mvpInfo={timer}
-        currentTime={this.getServerTime(true)}
+        currentTime={this.getServerTime}
       />
     );
   }

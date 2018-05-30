@@ -5,7 +5,7 @@ export default class MvpTimer extends Component {
     super(props);
     this.state = {
       timerStart: this.props.mvpInfo.kill_time,
-      currentTime: this.props.currentTime,
+      currentTime: this.props.currentTime(true),
       spawnTimeMin: new Date(
         this.props.mvpInfo.kill_time + this.props.mvpInfo.time * 60 * 1000
       ),
@@ -16,6 +16,7 @@ export default class MvpTimer extends Component {
       tombX: -1,
       tombY: -1
     };
+
     this.delete = this.delete.bind(this);
     this.tick = this.tick.bind(this);
     this.getCountdown = this.getCountdown.bind(this);
@@ -36,13 +37,14 @@ export default class MvpTimer extends Component {
   }
 
   tick() {
-    this.setState({ currentTime: this.props.currentTime });
+    this.setState({ currentTime: this.props.currentTime(true) });
     if (
       this.state.spawnTimeMin - this.state.currentTime <
-      -2 * this.props.mvpInfo.time * 60 * 1000
+      -1 * this.props.mvpInfo.time * 60 * 1000
     ) {
       this.delete();
     }
+    console.log(this.props.currentTime(true).toString());
   }
 
   positionMarker(e) {
@@ -104,7 +106,7 @@ export default class MvpTimer extends Component {
         <div className="mvpImg">
           <img
             src={"../img/mvp/" + this.props.mvpInfo.id + ".gif"}
-            alt={this.props.mvpInfo.name + " (" + this.state.id + ")"}
+            alt={this.props.mvpInfo.name + " (" + this.props.mvpInfo.id + ")"}
             onClick={this.showMvpList}
           />
         </div>
