@@ -35,7 +35,7 @@ export default class TimeSelect extends React.Component {
         <ul className="timePickerList list-group">
           <li className="timePickerItem list-group-item">
             <div className="timePickerImg">
-              <img src={"../img/tomb.png"} alt="tomb" />
+              <img src={"./img/tomb.png"} alt="tomb" />
             </div>
             <form
               className="form-inline my-2 my-lg-0"

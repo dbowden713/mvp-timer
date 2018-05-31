@@ -24,7 +24,7 @@ export default class MvpList extends React.Component {
         >
           <div className="mvpPickerImg">
             <img
-              src={"../img/mvp/" + mvp.id + ".gif"}
+              src={"./img/mvp/" + mvp.id + ".gif"}
               alt={mvp.name + " (" + mvp.id + ")"}
             />
           </div>

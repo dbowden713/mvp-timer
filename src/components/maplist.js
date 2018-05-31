@@ -17,6 +17,10 @@ export default class MapList extends React.Component {
     }
   }
 
+  componentDidMount() {
+    if(this.state.mvp.respawn.length === 1) this.pickMap(0);
+  }
+
   displayMapPicker() {
     const mapList = this.state.mvp.respawn.map((map, i) => {
       return (
@@ -27,7 +31,7 @@ export default class MapList extends React.Component {
         >
           <div className="mapPickerImg">
             <img
-              src={"../img/map/" + map.map + ".gif"}
+              src={"./img/map/" + map.map + ".gif"}
               alt={map.map + " (" + map.map_name + ")"}
             />
           </div>

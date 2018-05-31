@@ -4,12 +4,15 @@ export default class Header extends Component {
   render(props) {
     return (
       <div id="header">
+        <div style={{ textAlign: "center" }}>
+          <h3>{this.props.time}</h3>
+        </div>
         <div
           id="newTimerBtn"
           className="btn btn-primary btn-lg"
           onClick={this.props.newTimer}
         >
-          New Timer
+          {this.props.addingTimer ? "Cancel" : "New Timer"}
         </div>
         <div
           id="clearTimersBtn"

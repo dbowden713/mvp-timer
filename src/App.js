@@ -26,6 +26,29 @@ export default class App extends Component {
     this.tick = this.tick.bind(this);
     this.newTimerForm = this.newTimerForm.bind(this);
     this.createNewTimer = this.createNewTimer.bind(this);
+    this.placeTomb = this.placeTomb.bind(this);
+    this.sortTimers = this.sortTimers.bind(this);
+  }
+  componentDidMount() {
+    this.setState({ currentTimers: timers });
+    this.timer = setInterval(this.tick, 1000);
+  }
+  componentWillUnmount() {
+    clearInterval(this.timer);
+  }
+  componentDidUpdate() {
+    this.createNewTimer();
+  }
+  tick() {
+    this.setState({ serverTime: this.getServerTime() });
+  }
+  getServerTime(obj = false) {
+    var time = new Date();
+    var timeOffset = time.getTimezoneOffset();
+    time.setMinutes(time.getMinutes() + timeOffset - 240);
+    return obj
+      ? time
+      : "Server Time: " + time.toLocaleTimeString("en-US", { hour12: false });
   }
   toggleNewTimer() {
     // if we were in the process of adding a new mvp, clear it out
@@ -79,35 +102,35 @@ export default class App extends Component {
       "map" in this.state.newTimer &&
       "kill_time" in this.state.newTimer
     ) {
-      let newTimers = this.state.currentTimers;
-      newTimers.push(this.state.newTimer);
+      let newTimerList = this.state.currentTimers;
+      let newTimer = this.state.newTimer;
+      newTimer.spawnTimeMin = new Date(
+        newTimer.kill_time + newTimer.time * 60 * 1000);
+      newTimer.spawnTimeMax= new Date(
+        newTimer.kill_time +
+        (newTimer.time + newTimer.time_var) * 60 * 1000);
+      newTimer.tombX = -1;
+      newTimer.tombY = -1;
+      newTimerList.push(newTimer);
+      this.sortTimers(newTimerList);
       this.setState({
-        currentTimers: newTimers,
+        currentTimers: newTimerList,
         newTimer: {},
         addingTimer: false
       });
     }
   }
-  componentDidUpdate() {
-    this.createNewTimer();
+  sortTimers(timers) {
+    timers.sort((timer1, timer2) => {
+      return timer1.spawnTimeMin - timer2.spawnTimeMin;
+    })
   }
-  componentDidMount() {
-    this.setState({ currentTimers: timers });
-    this.timer = setInterval(this.tick, 1000);
-  }
-  componentWillUnmount() {
-    clearInterval(this.timer);
-  }
-  tick() {
-    this.setState({ serverTime: this.getServerTime() });
-  }
-  getServerTime(obj = false) {
-    var time = new Date();
-    var timeOffset = time.getTimezoneOffset();
-    time.setMinutes(time.getMinutes() + timeOffset - 240);
-    return obj
-      ? time
-      : "Server Time: " + time.toLocaleTimeString("en-US", { hour12: false });
+  placeTomb(coords, index) {
+    console.log(coords);
+    let newTimers = this.state.currentTimers;
+    newTimers[index].tombX = coords.X;
+    newTimers[index].tombY = coords.Y;
+    this.setState({ currentTimers: newTimers});
   }
   listTimers(timer, i) {
     return (
@@ -116,19 +139,17 @@ export default class App extends Component {
         index={i}
         delete={this.deleteTimer}
         mvpInfo={timer}
-        currentTime={this.getServerTime}
+        currentTime={this.getServerTime(true)}
+        placeTomb={(coords)=>this.placeTomb(coords, i)}
       />
     );
   }
   render() {
     return (
       <div id="appContainer">
-        <div style={{ textAlign: "center" }}>
-          <h3>{this.getServerTime()}</h3>
-        </div>
-        <Header newTimer={this.toggleNewTimer} clearTimers={this.clearTimers} />
+        <Header newTimer={this.toggleNewTimer} addingTimer={this.state.addingTimer} clearTimers={this.clearTimers} time={this.getServerTime()} />
         {this.newTimerForm()}
-        <ul className="mvpTimerList list-group">
+        <ul id="timerList" className="list-group">
           {this.state.currentTimers.map(this.listTimers)}
         </ul>
       </div>
