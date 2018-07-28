@@ -25,6 +25,9 @@ export default class MvpTimer extends Component {
     }
   }
 
+  componentWillMount() {
+  }
+
   setTombPosition(e) {
     var rect = e.target.getBoundingClientRect();
     var x = e.clientX - rect.left + e.target.offsetLeft - 7;
@@ -43,15 +46,22 @@ export default class MvpTimer extends Component {
             top: this.props.mvpInfo.tombY,
             left: this.props.mvpInfo.tombX,
             width: "15px",
-            height: "15px"
+            height: "15px",
+            transform: "translate(-50%, -50%)"
           }}
         />
       );
     }
   }
+  setTombPosition(e) {
+    var rect = e.target.getBoundingClientRect();
+    var x = e.clientX - rect.left + e.target.offsetLeft;
+    var y = e.clientY - rect.top + e.target.offsetTop;
+    this.props.placeTomb({ X: x, Y: y });
+  }
 
   getCountdown(time) {
-    var timeDifference = time.getTime() - this.props.currentTime;
+    var timeDifference = time - this.props.currentTime;
     var seconds = Math.floor(Math.abs(timeDifference) / 1000);
     var hours = Math.floor(seconds / 3600);
     var minutes = Math.floor((seconds - hours * 3600) / 60);
@@ -72,7 +82,7 @@ export default class MvpTimer extends Component {
     return neg + hours + ":" + minutes + ":" + secs;
   }
 
-  render(props) {
+  render() {
     return (
       <div className="mvpTimer list-group-item">
         <div className="mvpTimerName mb-1">{this.props.mvpInfo.name}</div>
@@ -89,12 +99,12 @@ export default class MvpTimer extends Component {
           />
         </div>
         <div className="mapImg">
-          {this.drawTomb()}
           <img
             src={"./img/map/" + this.props.mvpInfo.map + ".gif"}
             alt={"No map (" + this.props.mvpInfo.map + ")"}
             onClick={e => this.setTombPosition(e)}
           />
+          {this.drawTomb()}
         </div>
         <div className="mvpTimerClock">
           {this.getCountdown(this.props.mvpInfo.spawnTimeMin)}

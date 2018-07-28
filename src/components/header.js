@@ -5,7 +5,7 @@ export default class Header extends Component {
     return (
       <div id="header">
         <div style={{ textAlign: "center" }}>
-          <h3>{this.props.time}</h3>
+          <h3>Server Time: {this.props.time}</h3>
         </div>
         <div
           id="newTimerBtn"

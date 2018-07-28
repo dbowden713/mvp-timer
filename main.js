@@ -8,15 +8,21 @@ let win;
 function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({ 
-    width: 400, 
-    height: 600, 
+    width: 350, 
+    height: 650, 
     icon: path.join(__dirname, '/src/icon.png'),
     frame: false,
-    backgroundColor: '#222'
+    backgroundColor: '#222',
+    resizable: true,
+    alwaysOnTop: true
   });
+  
+  //win.setAlwaysOnTop(true, "floating", 1);
 
   // and load the index.html of the app.
   win.loadFile("./src/index.html");
+
+  //win.webContents.on("devtools-opened", () => { win.webContents.closeDevTools(); });
 
   // Open the DevTools.
   //win.webContents.openDevTools();

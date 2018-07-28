@@ -255,6 +255,12 @@
           "map_name": "Bio Laboratory F2",
           "time": "120",
           "time_var": "10"
+        },
+        {
+          "map": "bossnia_01",
+          "map_name": "Bosnia",
+          "time": "60",
+          "time_var": "0"
         }
       ]
     },
