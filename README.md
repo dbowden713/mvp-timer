@@ -14,7 +14,7 @@ This repository only contains the source code for the project.
 
 Using the program is fairly straightforward. The main screen consists of a list of active timers. If no timers exist, a new one can be created with the **New Timer** button.
 
-####Add a timer
+#### Add a timer
 
 * Click the new timer button.
 * Search for an MVP by name using the search bar.
@@ -22,11 +22,11 @@ Using the program is fairly straightforward. The main screen consists of a list 
 * Click map to set kill position.
 * Enter kill time in 24hr format. Press enter to use current time.
 
-####Edit a timer
+#### Edit a timer
 
 * Clicking on the map will place a new marker.
 
-####Delete a timer
+#### Delete a timer
 
 * Click the red trash icon ![alt text](https://raw.githubusercontent.com/dbowden713/mvp-timer/master/src/img/delete.png 'Trash icon') to delete a timer.
 * Click the _Clear All_ to remove all timers.
